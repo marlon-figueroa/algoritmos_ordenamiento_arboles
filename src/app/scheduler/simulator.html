@@ -1,0 +1,182 @@
+<section class="card shadow-sm mb-4" aria-labelledby="sched-sim-title">
+  <div class="card-body">
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+      <div>
+        <p class="text-primary fw-semibold text-uppercase small letter-wide mb-1">Simulador</p>
+        <h2 id="sched-sim-title" class="h4 font-display mb-0">Usa {{ algorithm().name }}</h2>
+      </div>
+      <span class="badge text-bg-secondary align-self-center">
+        Paso {{ total() ? index() + 1 : 0 }} / {{ total() }} · t={{ frame().time }}
+      </span>
+    </div>
+
+    <form class="mb-3" (submit)="$event.preventDefault(); load()">
+      <label class="form-label small mb-1" for="sched-input">
+        Procesos (id, llegada, ráfaga, prioridad)
+      </label>
+      <textarea
+        id="sched-input"
+        class="form-control font-monospace"
+        rows="5"
+        [class.is-invalid]="error()"
+        [value]="rawInput()"
+        (input)="rawInput.set($any($event.target).value)"
+        placeholder="P1 0 5 2"
+      ></textarea>
+      @if (error()) {
+        <div class="invalid-feedback d-block">{{ error() }}</div>
+      }
+      <p class="form-text mb-2">Una fila por proceso. Prioridad 1 es la más alta.</p>
+      <div class="d-flex flex-wrap align-items-end gap-2">
+        @if (algorithm().usesQuantum) {
+          <div>
+            <label class="form-label small mb-1" for="sched-quantum">Quantum</label>
+            <input
+              id="sched-quantum"
+              type="number"
+              min="1"
+              max="9"
+              class="form-control"
+              style="width: 6rem"
+              [value]="quantum()"
+              (input)="onQuantum($any($event.target).value)"
+            />
+          </div>
+        }
+        <button type="submit" class="btn btn-primary">Cargar</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="randomize()">Aleatorio</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="reset()">Reiniciar</button>
+      </div>
+    </form>
+
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+      <button type="button" class="btn btn-success" (click)="play()" [disabled]="!total() || playing()">
+        Reproducir
+      </button>
+      <button type="button" class="btn btn-outline-secondary" (click)="pause()" [disabled]="!playing()">
+        Pausa
+      </button>
+      <button type="button" class="btn btn-outline-secondary" (click)="back()" [disabled]="index() === 0">
+        Atrás
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        (click)="step()"
+        [disabled]="!total() || index() >= total() - 1"
+      >
+        Paso
+      </button>
+      <label class="small text-body-secondary ms-lg-2 mb-0" for="sched-speed">Velocidad</label>
+      <input
+        id="sched-speed"
+        type="range"
+        min="180"
+        max="1400"
+        step="40"
+        [value]="speed()"
+        (input)="onSpeed($any($event.target).value)"
+      />
+    </div>
+
+    <p class="alert mb-3" [class.alert-success]="frame().done" [class.alert-info]="!frame().done">
+      {{ frame().message }}
+    </p>
+
+    <div class="mb-3">
+      <div class="d-flex flex-wrap justify-content-between gap-2 small text-body-secondary mb-1">
+        <span>Diagrama de Gantt</span>
+        <span>
+          CPU:
+          <strong>{{ frame().running ?? 'ociosa' }}</strong>
+          · Cola:
+          {{ frame().ready.length ? frame().ready.join(', ') : 'vacía' }}
+        </span>
+      </div>
+      <div class="gantt-track rounded-3 overflow-hidden" role="img" [attr.aria-label]="'Gantt de ' + algorithm().name">
+        @if (frame().gantt.length) {
+          @for (slice of frame().gantt; track slice.start + (slice.processId ?? 'idle')) {
+            <div
+              class="gantt-slice"
+              [style.flex-grow]="slice.end - slice.start"
+              [style.background]="color(slice.processId)"
+              [class.gantt-idle]="!slice.processId"
+            >
+              <span>{{ slice.processId ?? 'idle' }}</span>
+              <small>{{ slice.start }}–{{ slice.end }}</small>
+            </div>
+          }
+        } @else {
+          <div class="gantt-empty text-body-secondary">El Gantt aparecerá al avanzar la simulación.</div>
+        }
+      </div>
+    </div>
+
+    <div class="table-responsive mb-3">
+      <table class="table table-sm align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Proceso</th>
+            <th>Llegada</th>
+            <th>Ráfaga</th>
+            <th>Restante</th>
+            <th>Prioridad</th>
+            @if (algorithm().slug === 'mlq' || algorithm().slug === 'mlfq') {
+              <th>Cola</th>
+            }
+            <th>Espera</th>
+            <th>Retorno</th>
+            <th>Respuesta</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (process of frame().processes; track process.id) {
+            <tr [class.table-primary]="process.status === 'running'">
+              <td>
+                <span class="gantt-dot me-1" [style.background]="color(process.id)"></span>
+                <strong>{{ process.id }}</strong>
+              </td>
+              <td>{{ process.arrival }}</td>
+              <td>{{ process.burst }}</td>
+              <td>{{ process.remaining }}</td>
+              <td>{{ process.priority }}</td>
+              @if (algorithm().slug === 'mlq' || algorithm().slug === 'mlfq') {
+                <td>Q{{ process.queue }}</td>
+              }
+              <td>{{ process.waiting }}</td>
+              <td>{{ process.turnaround }}</td>
+              <td>{{ process.response === null ? '—' : process.response }}</td>
+              <td>
+                <span class="badge rounded-pill" [class]="statusClass(process.status)">
+                  {{ statusLabel(process.status) }}
+                </span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row g-2 small">
+      <div class="col-md-4">
+        <div class="bg-body-tertiary rounded-3 p-3">
+          <div class="text-body-secondary text-uppercase">Espera media</div>
+          <div class="fw-bold fs-5">{{ stats().waiting | number: '1.2-2' }}</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="bg-body-tertiary rounded-3 p-3">
+          <div class="text-body-secondary text-uppercase">Retorno medio</div>
+          <div class="fw-bold fs-5">{{ stats().turnaround | number: '1.2-2' }}</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="bg-body-tertiary rounded-3 p-3">
+          <div class="text-body-secondary text-uppercase">Respuesta media</div>
+          <div class="fw-bold fs-5">{{ stats().response | number: '1.2-2' }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

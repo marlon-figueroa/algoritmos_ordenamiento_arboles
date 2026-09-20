@@ -3,7 +3,7 @@
     <nav class="mb-3" aria-label="Migas de pan">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a routerLink="/">AOA</a>
+          <a routerLink="/planificacion">APPSO</a>
         </li>
         <li class="breadcrumb-item active" aria-current="page">{{ algorithm.name }}</li>
       </ol>
@@ -11,57 +11,56 @@
 
     <header class="mb-4 col-lg-10">
       <p class="text-primary fw-semibold text-uppercase small letter-wide mb-2">
-        {{ algorithm.treeType }}
+        {{ algorithm.family }}
       </p>
       <h1 class="display-5 font-display">{{ algorithm.name }}</h1>
       <p class="lead text-body-secondary">{{ algorithm.description }}</p>
       <div class="d-flex flex-wrap gap-2">
+        <span class="badge rounded-pill text-bg-secondary">{{ algorithm.complexity.kind }}</span>
+        <span class="badge rounded-pill text-bg-secondary">{{ algorithm.complexity.criterion }}</span>
         <span class="badge rounded-pill text-bg-secondary">
-          {{ algorithm.stable ? 'Estable' : 'Inestable' }}
-        </span>
-        <span class="badge rounded-pill text-bg-secondary">
-          {{ algorithm.inPlace ? 'In-place' : 'Usa memoria auxiliar' }}
+          Inanición: {{ algorithm.complexity.starvation }}
         </span>
       </div>
     </header>
 
-    <app-simulator [algorithm]="algorithm" />
+    <app-scheduler-simulator [algorithm]="algorithm" />
 
-    <section class="card mb-4" aria-labelledby="complexity-title">
+    <section class="card mb-4" aria-labelledby="sched-complexity-title">
       <div class="card-body">
-        <h2 id="complexity-title" class="h4 font-display mb-3">Complejidad</h2>
+        <h2 id="sched-complexity-title" class="h4 font-display mb-3">Características</h2>
         <div class="row g-3">
           <div class="col-6 col-lg-3">
             <div class="bg-body-tertiary rounded-3 p-3 h-100">
-              <div class="text-body-secondary text-uppercase small">Mejor caso</div>
-              <div class="fw-bold">{{ algorithm.complexity.best }}</div>
+              <div class="text-body-secondary text-uppercase small">Criterio</div>
+              <div class="fw-bold">{{ algorithm.complexity.criterion }}</div>
             </div>
           </div>
           <div class="col-6 col-lg-3">
             <div class="bg-body-tertiary rounded-3 p-3 h-100">
-              <div class="text-body-secondary text-uppercase small">Caso promedio</div>
-              <div class="fw-bold">{{ algorithm.complexity.average }}</div>
+              <div class="text-body-secondary text-uppercase small">Tipo</div>
+              <div class="fw-bold">{{ algorithm.complexity.kind }}</div>
             </div>
           </div>
           <div class="col-6 col-lg-3">
             <div class="bg-body-tertiary rounded-3 p-3 h-100">
-              <div class="text-body-secondary text-uppercase small">Peor caso</div>
-              <div class="fw-bold">{{ algorithm.complexity.worst }}</div>
+              <div class="text-body-secondary text-uppercase small">Inanición</div>
+              <div class="fw-bold">{{ algorithm.complexity.starvation }}</div>
             </div>
           </div>
           <div class="col-6 col-lg-3">
             <div class="bg-body-tertiary rounded-3 p-3 h-100">
-              <div class="text-body-secondary text-uppercase small">Espacio</div>
-              <div class="fw-bold">{{ algorithm.complexity.space }}</div>
+              <div class="text-body-secondary text-uppercase small">Selección</div>
+              <div class="fw-bold">{{ algorithm.complexity.selection }}</div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="card mb-4" aria-labelledby="steps-title">
+    <section class="card mb-4" aria-labelledby="sched-steps-title">
       <div class="card-body">
-        <h2 id="steps-title" class="h4 font-display mb-3">Cómo funciona</h2>
+        <h2 id="sched-steps-title" class="h4 font-display mb-3">Cómo funciona</h2>
         <ol class="list-group list-group-flush list-group-numbered">
           @for (step of algorithm.howItWorks; track step) {
             <li class="list-group-item bg-transparent px-0">{{ step }}</li>
@@ -71,33 +70,33 @@
     </section>
 
     <div class="row g-4 mb-4">
-      <section class="col-lg-7" aria-labelledby="pseudo-title">
+      <section class="col-lg-7" aria-labelledby="sched-pseudo-title">
         <div class="card h-100">
           <div class="card-body">
-            <h2 id="pseudo-title" class="h4 font-display mb-3">Pseudocódigo</h2>
+            <h2 id="sched-pseudo-title" class="h4 font-display mb-3">Pseudocódigo</h2>
             <pre class="algo-pre p-3 mb-0 overflow-auto"><code>{{ algorithm.pseudocode }}</code></pre>
           </div>
         </div>
       </section>
-      <section class="col-lg-5" aria-labelledby="example-title">
+      <section class="col-lg-5" aria-labelledby="sched-example-title">
         <div class="card h-100">
           <div class="card-body">
-            <h2 id="example-title" class="h4 font-display mb-3">Ejemplo</h2>
+            <h2 id="sched-example-title" class="h4 font-display mb-3">Ejemplo</h2>
             <pre class="algo-pre p-3 mb-0 overflow-auto"><code>{{ algorithm.example }}</code></pre>
           </div>
         </div>
       </section>
     </div>
 
-    <section aria-labelledby="related-title">
-      <h2 id="related-title" class="h4 font-display mb-3">Otros algoritmos</h2>
+    <section aria-labelledby="sched-related-title">
+      <h2 id="sched-related-title" class="h4 font-display mb-3">Otros algoritmos</h2>
       <div class="row g-3">
         @for (item of related(); track item.slug) {
           <div class="col-md-4">
-            <a class="card algo-card h-100 text-decoration-none text-body" [routerLink]="['/algoritmos', item.slug]">
+            <a class="card algo-card h-100 text-decoration-none text-body" [routerLink]="['/planificacion', item.slug]">
               <div class="card-body">
                 <strong class="d-block">{{ item.name }}</strong>
-                <span class="text-body-secondary small">{{ item.treeType }}</span>
+                <span class="text-body-secondary small">{{ item.family }}</span>
               </div>
             </a>
           </div>
@@ -108,7 +107,7 @@
 } @else {
   <section class="py-5 col-lg-7">
     <h1 class="font-display">No encontramos ese algoritmo</h1>
-    <p class="text-body-secondary">El enlace no coincide con ninguna página del catálogo.</p>
-    <a class="btn btn-primary" routerLink="/">Volver al menú</a>
+    <p class="text-body-secondary">El enlace no coincide con ninguna política del catálogo APPSO.</p>
+    <a class="btn btn-primary" routerLink="/planificacion">Volver al menú</a>
   </section>
 }

@@ -20,6 +20,7 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.navbar-brand')?.textContent).toContain('Árboles');
+    expect(compiled.querySelector('.navbar')?.textContent).toContain('AOA');
+    expect(compiled.querySelector('.navbar')?.textContent).toContain('APPSO');
   });
 });

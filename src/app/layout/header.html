@@ -1,15 +1,15 @@
 <nav class="navbar navbar-expand-lg sticky-top bg-body-tertiary border-bottom">
   <div class="container">
-    <a class="navbar-brand d-flex align-items-center gap-2 py-2 me-auto" routerLink="/">
+    <a class="navbar-brand d-flex align-items-center gap-2 py-2 me-lg-3" routerLink="/">
       <span class="brand-mark rounded-3 d-inline-flex align-items-center justify-content-center" aria-hidden="true">
         <svg viewBox="0 0 32 32" fill="none">
           <path d="M16 4 6 28h20L16 4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
           <path d="M16 12v12M11 20h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
         </svg>
       </span>
-      <span>
-        <span class="d-block font-display lh-sm">Árboles &amp; Ordenamiento</span>
-        <small class="d-none d-md-block text-body-secondary fw-normal">Algoritmos con estructura de árbol</small>
+      <span class="d-none d-sm-block">
+        <span class="d-block font-display lh-sm">Simuladores</span>
+        <small class="text-body-secondary fw-normal">AOA · APPSO</small>
       </span>
     </a>
 
@@ -54,15 +54,52 @@
     </div>
 
     <div class="collapse navbar-collapse" id="menuPrincipal">
-      <ul class="navbar-nav me-lg-auto mt-2 mt-lg-0">
+      <ul class="navbar-nav me-lg-auto mt-2 mt-lg-0 gap-lg-2">
         <li class="nav-item">
           <a
-            class="nav-link"
+            class="nav-link nav-topic"
             routerLink="/"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
+            [class.active]="aoaActive()"
+            [attr.aria-current]="aoaActive() ? 'page' : null"
+            title="Algoritmos de ordenamiento de árboles"
           >
-            Inicio
+            <span class="nav-topic-icon" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none">
+                <path
+                  d="M16 3.5c0 0-2.2 4.2-5.2 7.2C8.2 13.3 6 15.2 6 19.2 6 23.8 10.3 27 16 27s10-3.2 10-7.8c0-4-2.2-5.9-4.8-8.5C18.2 7.7 16 3.5 16 3.5Z"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linejoin="round"
+                />
+                <path d="M16 15.5V27" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                <path d="M12 20h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              </svg>
+            </span>
+            <span>
+              <span class="d-block font-display lh-sm">AOA</span>
+              <small class="nav-topic-desc">Algoritmos de ordenamiento de árboles</small>
+            </span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link nav-topic"
+            routerLink="/planificacion"
+            [class.active]="appsoActive()"
+            [attr.aria-current]="appsoActive() ? 'page' : null"
+            title="Algoritmos de planificación de procesos de sistema operativo"
+          >
+            <span class="nav-topic-icon" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none">
+                <rect x="5" y="6" width="22" height="14" rx="2.2" stroke="currentColor" stroke-width="1.8" />
+                <path d="M11 26h10M16 20v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                <path d="M10 11h4M18 11h4M10 15h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              </svg>
+            </span>
+            <span>
+              <span class="d-block font-display lh-sm">APPSO</span>
+              <small class="nav-topic-desc">Algoritmos de planificación de procesos de sistema operativo</small>
+            </span>
           </a>
         </li>
       </ul>
