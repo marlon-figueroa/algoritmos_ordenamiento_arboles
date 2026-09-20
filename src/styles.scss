@@ -1,0 +1,99 @@
+$primary: #1f6b48;
+$secondary: #8a6a3a;
+$success: #2d6a4f;
+$font-family-sans-serif:
+  'Source Sans 3',
+  system-ui,
+  -apple-system,
+  'Segoe UI',
+  sans-serif;
+$headings-font-family: 'Fraunces', Georgia, serif;
+$headings-font-weight: 680;
+$border-radius: 0.85rem;
+$border-radius-lg: 1.1rem;
+$card-border-radius: 1.1rem;
+$navbar-brand-font-size: 1.05rem;
+$min-contrast-ratio: 4.5;
+
+@import 'bootstrap/scss/bootstrap';
+
+[data-bs-theme='light'] {
+  --bs-body-bg: #f3efe6;
+  --bs-body-color: #1c2418;
+  --bs-secondary-color: #5d6758;
+  --bs-tertiary-bg: #fffaf2;
+  --bs-border-color: #d9d0c2;
+  --bs-primary: #1f6b48;
+  --bs-primary-rgb: 31, 107, 72;
+  --bs-link-color: #1f6b48;
+  --bs-link-hover-color: #145338;
+  --bs-emphasis-color: #1c2418;
+  --code-bg: #17211b;
+  --code-text: #e7f0e8;
+}
+
+[data-bs-theme='dark'] {
+  --bs-body-bg: #101612;
+  --bs-body-color: #e8eee6;
+  --bs-secondary-color: #a7b3a8;
+  --bs-tertiary-bg: #182019;
+  --bs-border-color: #2c3a30;
+  --bs-primary: #8ad4aa;
+  --bs-primary-rgb: 138, 212, 170;
+  --bs-link-color: #8ad4aa;
+  --bs-link-hover-color: #b5e6c8;
+  --bs-emphasis-color: #e8eee6;
+  --code-bg: #0c120e;
+  --code-text: #d7eadb;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+.font-display {
+  font-family: $headings-font-family;
+  letter-spacing: -0.03em;
+}
+
+.algo-card {
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease;
+}
+
+.algo-card:hover,
+.algo-card:focus-visible {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--bs-primary) 55%, var(--bs-border-color));
+  box-shadow: var(--bs-box-shadow);
+}
+
+.algo-pre {
+  background: var(--code-bg);
+  color: var(--code-text);
+  border-radius: var(--bs-border-radius);
+}
+
+.brand-mark {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--bs-primary);
+  background: rgba(var(--bs-primary-rgb), 0.14);
+}
+
+.brand-mark svg {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+.theme-toggle svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.letter-wide {
+  letter-spacing: 0.08em;
+}
+

@@ -1,0 +1,71 @@
+<nav class="navbar navbar-expand-lg sticky-top bg-body-tertiary border-bottom">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center gap-2 py-2 me-auto" routerLink="/">
+      <span class="brand-mark rounded-3 d-inline-flex align-items-center justify-content-center" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none">
+          <path d="M16 4 6 28h20L16 4Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+          <path d="M16 12v12M11 20h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        </svg>
+      </span>
+      <span>
+        <span class="d-block font-display lh-sm">Árboles &amp; Ordenamiento</span>
+        <small class="d-none d-md-block text-body-secondary fw-normal">Algoritmos con estructura de árbol</small>
+      </span>
+    </a>
+
+    <div class="d-flex align-items-center gap-2 order-lg-3">
+      <button
+        type="button"
+        class="btn btn-outline-secondary d-inline-flex align-items-center gap-2 theme-toggle"
+        (click)="theme.toggle()"
+        [attr.aria-pressed]="theme.isDark()"
+        [attr.aria-label]="'Cambiar a tema ' + (theme.isDark() ? 'claro' : 'oscuro')"
+      >
+        @if (theme.isDark()) {
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              fill="currentColor"
+              d="M6.76 4.84 5.34 3.42 3.93 4.83l1.41 1.42 1.42-1.41ZM1 13h3v-2H1v2Zm10 10h2v-3h-2v3Zm9.07-18.17-1.41-1.41-1.42 1.42 1.42 1.41 1.41-1.42ZM20 11v2h3v-2h-3ZM12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12Zm6.24 13.16 1.42 1.41 1.41-1.41-1.41-1.42-1.42 1.42ZM4.83 20.07l1.41 1.41 1.42-1.41-1.42-1.42-1.41 1.42Z"
+            />
+          </svg>
+          <span class="d-none d-sm-inline">Claro</span>
+        } @else {
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              fill="currentColor"
+              d="M12.7 2.01A9.99 9.99 0 0 0 12 2a10 10 0 1 0 9.54 13.11 8 8 0 0 1-8.84-13.1Z"
+            />
+          </svg>
+          <span class="d-none d-sm-inline">Oscuro</span>
+        }
+      </button>
+
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#menuPrincipal"
+        aria-controls="menuPrincipal"
+        aria-expanded="false"
+        aria-label="Abrir menú"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+
+    <div class="collapse navbar-collapse" id="menuPrincipal">
+      <ul class="navbar-nav me-lg-auto mt-2 mt-lg-0">
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="/"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            Inicio
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
