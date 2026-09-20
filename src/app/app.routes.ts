@@ -3,6 +3,8 @@ import { Home } from './pages/home/home';
 import { AlgorithmPage } from './pages/algorithm/algorithm';
 import { SchedulingHome } from './pages/scheduling-home/scheduling-home';
 import { SchedulingPage } from './pages/scheduling/scheduling';
+import { RaidHome } from './pages/raid-home/raid-home';
+import { RaidPage } from './pages/raid/raid';
 import { NotFound } from './pages/not-found/not-found';
 
 export const routes: Routes = [
@@ -23,6 +25,15 @@ export const routes: Routes = [
   {
     path: 'planificacion/:slug',
     component: SchedulingPage,
+  },
+  {
+    path: 'raids',
+    component: RaidHome,
+    title: 'ARD · RAIDs de discos',
+  },
+  {
+    path: 'raids/:slug',
+    component: RaidPage,
   },
   {
     path: '**',

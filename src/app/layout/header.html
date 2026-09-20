@@ -9,7 +9,7 @@
       </span>
       <span class="d-none d-sm-block">
         <span class="d-block font-display lh-sm">Simuladores</span>
-        <small class="text-body-secondary fw-normal">AOA · APPSO</small>
+        <small class="text-body-secondary fw-normal">AOA · APPSO · ARD</small>
       </span>
     </a>
 
@@ -99,6 +99,27 @@
             <span>
               <span class="d-block font-display lh-sm">APPSO</span>
               <small class="nav-topic-desc">Algoritmos de planificación de procesos de sistema operativo</small>
+            </span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link nav-topic"
+            routerLink="/raids"
+            [class.active]="ardActive()"
+            [attr.aria-current]="ardActive() ? 'page' : null"
+            title="Algoritmos de RAIDs existentes para discos"
+          >
+            <span class="nav-topic-icon" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none">
+                <ellipse cx="16" cy="8" rx="10" ry="3.2" stroke="currentColor" stroke-width="1.8" />
+                <path d="M6 8v6c0 1.8 4.5 3.2 10 3.2s10-1.4 10-3.2V8" stroke="currentColor" stroke-width="1.8" />
+                <path d="M6 14v6c0 1.8 4.5 3.2 10 3.2s10-1.4 10-3.2v-6" stroke="currentColor" stroke-width="1.8" />
+              </svg>
+            </span>
+            <span>
+              <span class="d-block font-display lh-sm">ARD</span>
+              <small class="nav-topic-desc">Algoritmos de RAIDs existentes para discos</small>
             </span>
           </a>
         </li>

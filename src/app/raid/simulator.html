@@ -1,0 +1,128 @@
+<section class="card shadow-sm mb-4" aria-labelledby="raid-sim-title">
+  <div class="card-body">
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+      <div>
+        <p class="text-primary fw-semibold text-uppercase small letter-wide mb-1">Simulador</p>
+        <h2 id="raid-sim-title" class="h4 font-display mb-0">Usa {{ algorithm().name }}</h2>
+      </div>
+      <span class="badge text-bg-secondary align-self-center">
+        Paso {{ total() ? index() + 1 : 0 }} / {{ total() }}
+      </span>
+    </div>
+
+    <form class="mb-3" (submit)="$event.preventDefault(); load()">
+      <div class="row g-2 align-items-end">
+        <div class="col-lg-7">
+          <label class="form-label small mb-1" for="raid-input">Bloques lógicos</label>
+          <input
+            id="raid-input"
+            class="form-control"
+            [class.is-invalid]="error()"
+            [value]="rawInput()"
+            (input)="rawInput.set($any($event.target).value)"
+            placeholder="A B C D E F G H"
+          />
+          @if (error()) {
+            <div class="invalid-feedback d-block">{{ error() }}</div>
+          }
+        </div>
+        <div class="col-6 col-lg-2">
+          <label class="form-label small mb-1" for="raid-disks">Discos</label>
+          <input
+            id="raid-disks"
+            type="number"
+            class="form-control"
+            [min]="algorithm().minDisks"
+            [max]="algorithm().maxDisks"
+            [step]="algorithm().evenDisks ? 2 : 1"
+            [value]="disks()"
+            (input)="onDisks($any($event.target).value)"
+            [disabled]="algorithm().minDisks === algorithm().maxDisks"
+          />
+        </div>
+        <div class="col-6 col-lg-3 d-flex flex-wrap gap-2">
+          <button type="submit" class="btn btn-primary">Cargar</button>
+          <button type="button" class="btn btn-outline-secondary" (click)="randomize()">Aleatorio</button>
+          <button type="button" class="btn btn-outline-secondary" (click)="reset()">Reiniciar</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+      <button type="button" class="btn btn-success" (click)="play()" [disabled]="!total() || playing()">
+        Reproducir
+      </button>
+      <button type="button" class="btn btn-outline-secondary" (click)="pause()" [disabled]="!playing()">
+        Pausa
+      </button>
+      <button type="button" class="btn btn-outline-secondary" (click)="back()" [disabled]="index() === 0">
+        Atrás
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        (click)="step()"
+        [disabled]="!total() || index() >= total() - 1"
+      >
+        Paso
+      </button>
+      <label class="small text-body-secondary ms-lg-2 mb-0" for="raid-speed">Velocidad</label>
+      <input
+        id="raid-speed"
+        type="range"
+        min="180"
+        max="1400"
+        step="40"
+        [value]="speed()"
+        (input)="onSpeed($any($event.target).value)"
+      />
+    </div>
+
+    <p class="alert mb-3" [class.alert-success]="frame().done" [class.alert-info]="!frame().done">
+      {{ frame().message }}
+    </p>
+
+    <div class="raid-legend d-flex flex-wrap gap-3 small text-body-secondary mb-2">
+      <span><i class="raid-swatch" style="background: #1d4ed8"></i> Dato</span>
+      <span><i class="raid-swatch" style="background: #0284c7"></i> Espejo</span>
+      <span><i class="raid-swatch" style="background: #4338ca"></i> Paridad</span>
+      <span><i class="raid-swatch" style="background: #6366f1"></i> Hamming</span>
+    </div>
+
+    <div
+      class="raid-array"
+      [style.grid-template-columns]="'repeat(' + frame().disks.length + ', minmax(6.5rem, 1fr))'"
+      role="img"
+      [attr.aria-label]="'Arreglo de ' + algorithm().name"
+    >
+      @for (disk of frame().disks; track disk.index) {
+        <div class="raid-disk" [class.raid-disk-failed]="disk.failed">
+          <header class="raid-disk-head">
+            <strong>{{ disk.name }}</strong>
+            <small>{{ disk.role }}</small>
+            @if (disk.failed) {
+              <span class="badge text-bg-danger">Fallo</span>
+            }
+          </header>
+          <div class="raid-disk-body">
+            @for (row of rows(); track row) {
+              @if (cellAt(disk.index, row); as cell) {
+                <div
+                  class="raid-cell"
+                  [class.raid-cell-on]="cell.highlight"
+                  [class.raid-cell-rebuilt]="cell.reconstructed"
+                  [style.background]="cellColor(cell.kind)"
+                  [attr.title]="kindLabel(cell.kind) + ': ' + cell.label"
+                >
+                  {{ cell.label }}
+                </div>
+              } @else {
+                <div class="raid-cell raid-cell-empty">·</div>
+              }
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>

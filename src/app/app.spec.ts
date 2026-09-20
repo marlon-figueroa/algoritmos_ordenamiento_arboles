@@ -22,5 +22,6 @@ describe('App', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.navbar')?.textContent).toContain('AOA');
     expect(compiled.querySelector('.navbar')?.textContent).toContain('APPSO');
+    expect(compiled.querySelector('.navbar')?.textContent).toContain('ARD');
   });
 });

@@ -1,0 +1,113 @@
+@if (algorithm(); as algorithm) {
+  <article class="py-3 pb-5">
+    <nav class="mb-3" aria-label="Migas de pan">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a routerLink="/raids">ARD</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">{{ algorithm.name }}</li>
+      </ol>
+    </nav>
+
+    <header class="mb-4 col-lg-10">
+      <p class="text-primary fw-semibold text-uppercase small letter-wide mb-2">
+        {{ algorithm.family }}
+      </p>
+      <h1 class="display-5 font-display">{{ algorithm.name }}</h1>
+      <p class="lead text-body-secondary">{{ algorithm.description }}</p>
+      <div class="d-flex flex-wrap gap-2">
+        <span class="badge rounded-pill text-bg-secondary">{{ algorithm.traits.kind }}</span>
+        <span class="badge rounded-pill text-bg-secondary">Usable {{ algorithm.traits.usable }}</span>
+        <span class="badge rounded-pill text-bg-secondary">
+          Tolerancia: {{ algorithm.traits.faultTolerance }}
+        </span>
+      </div>
+    </header>
+
+    <app-raid-simulator [algorithm]="algorithm" />
+
+    <section class="card mb-4" aria-labelledby="raid-traits-title">
+      <div class="card-body">
+        <h2 id="raid-traits-title" class="h4 font-display mb-3">Características</h2>
+        <div class="row g-3">
+          <div class="col-6 col-lg-3">
+            <div class="bg-body-tertiary rounded-3 p-3 h-100">
+              <div class="text-body-secondary text-uppercase small">Tipo</div>
+              <div class="fw-bold">{{ algorithm.traits.kind }}</div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="bg-body-tertiary rounded-3 p-3 h-100">
+              <div class="text-body-secondary text-uppercase small">Capacidad usable</div>
+              <div class="fw-bold">{{ algorithm.traits.usable }}</div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="bg-body-tertiary rounded-3 p-3 h-100">
+              <div class="text-body-secondary text-uppercase small">Tolerancia a fallos</div>
+              <div class="fw-bold">{{ algorithm.traits.faultTolerance }}</div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="bg-body-tertiary rounded-3 p-3 h-100">
+              <div class="text-body-secondary text-uppercase small">Acceso</div>
+              <div class="fw-bold">{{ algorithm.traits.access }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card mb-4" aria-labelledby="raid-steps-title">
+      <div class="card-body">
+        <h2 id="raid-steps-title" class="h4 font-display mb-3">Cómo funciona</h2>
+        <ol class="list-group list-group-flush list-group-numbered">
+          @for (step of algorithm.howItWorks; track step) {
+            <li class="list-group-item bg-transparent px-0">{{ step }}</li>
+          }
+        </ol>
+      </div>
+    </section>
+
+    <div class="row g-4 mb-4">
+      <section class="col-lg-7" aria-labelledby="raid-pseudo-title">
+        <div class="card h-100">
+          <div class="card-body">
+            <h2 id="raid-pseudo-title" class="h4 font-display mb-3">Pseudocódigo</h2>
+            <pre class="algo-pre p-3 mb-0 overflow-auto"><code>{{ algorithm.pseudocode }}</code></pre>
+          </div>
+        </div>
+      </section>
+      <section class="col-lg-5" aria-labelledby="raid-example-title">
+        <div class="card h-100">
+          <div class="card-body">
+            <h2 id="raid-example-title" class="h4 font-display mb-3">Ejemplo</h2>
+            <pre class="algo-pre p-3 mb-0 overflow-auto"><code>{{ algorithm.example }}</code></pre>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section aria-labelledby="raid-related-title">
+      <h2 id="raid-related-title" class="h4 font-display mb-3">Otros algoritmos</h2>
+      <div class="row g-3">
+        @for (item of related(); track item.slug) {
+          <div class="col-md-4">
+            <a class="card algo-card h-100 text-decoration-none text-body" [routerLink]="['/raids', item.slug]">
+              <div class="card-body">
+                <strong class="d-block">{{ item.name }}</strong>
+                <span class="text-body-secondary small">{{ item.family }}</span>
+              </div>
+            </a>
+          </div>
+        }
+      </div>
+    </section>
+  </article>
+} @else {
+  <section class="py-5 col-lg-7">
+    <h1 class="font-display">No encontramos ese RAID</h1>
+    <p class="text-body-secondary">El enlace no coincide con ningún nivel del catálogo ARD.</p>
+    <a class="btn btn-primary" routerLink="/raids">Volver al menú</a>
+  </section>
+}
