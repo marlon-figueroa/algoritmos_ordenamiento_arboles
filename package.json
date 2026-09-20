@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build:ghpages": "ng build --configuration production --base-href /algoritmos_ordenamiento_arboles/",
+    "build:ghpages": "ng build --configuration production --base-href /algoritmos_y_simuladores/",
     "deploy": "npm run build:ghpages && npx --yes angular-cli-ghpages --no-silent --dir=dist/algoritmos-ordenamiento-arboles/browser",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

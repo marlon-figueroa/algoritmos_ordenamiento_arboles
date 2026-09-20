@@ -41,7 +41,7 @@
           },
           "configurations": {
             "production": {
-              "baseHref": "/algoritmos_ordenamiento_arboles/",
+              "baseHref": "/algoritmos_y_simuladores/",
               "budgets": [
                 {
                   "type": "initial",
