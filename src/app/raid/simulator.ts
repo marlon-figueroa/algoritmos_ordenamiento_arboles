@@ -1,6 +1,8 @@
 import { Component, DestroyRef, computed, effect, inject, input, signal, untracked } from '@angular/core';
 import { RaidAlgorithm } from '../core/raids';
+import { downloadSimulationPdf } from '../core/pdf-report';
 import { simulateRaid } from './engines';
+import { buildRaidReport } from './report';
 import {
   CELL_COLORS,
   CellKind,
@@ -120,6 +122,18 @@ export class RaidSimulator {
   }
 
   kindLabel = kindLabel;
+
+  downloadPdf(): void {
+    if (!this.frames().length || this.error()) {
+      return;
+    }
+    try {
+      const blocks = parseBlocks(this.rawInput());
+      downloadSimulationPdf(buildRaidReport(this.algorithm(), blocks, this.disks(), this.frames()));
+    } catch (err) {
+      this.error.set(err instanceof Error ? err.message : 'No se pudo generar el PDF.');
+    }
+  }
 
   private queueTick(): void {
     if (this.timer) {

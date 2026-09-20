@@ -1,7 +1,9 @@
 import { DecimalPipe } from '@angular/common';
 import { Component, DestroyRef, computed, effect, inject, input, signal, untracked } from '@angular/core';
 import { SchedulerAlgorithm } from '../core/schedulers';
+import { downloadSimulationPdf } from '../core/pdf-report';
 import { simulateSchedule } from './engines';
+import { buildScheduleReport } from './report';
 import {
   SAMPLE_PROCESSES,
   SchedFrame,
@@ -129,6 +131,18 @@ export class SchedulerSimulator {
       return 'text-bg-info';
     }
     return 'text-bg-secondary';
+  }
+
+  downloadPdf(): void {
+    if (!this.frames().length || this.error()) {
+      return;
+    }
+    try {
+      const input = parseProcesses(this.rawInput());
+      downloadSimulationPdf(buildScheduleReport(this.algorithm(), input, this.frames(), this.quantum()));
+    } catch (err) {
+      this.error.set(err instanceof Error ? err.message : 'No se pudo generar el PDF.');
+    }
   }
 
   statusLabel(status: string): string {

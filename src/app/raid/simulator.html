@@ -44,6 +44,9 @@
           <button type="submit" class="btn btn-primary">Cargar</button>
           <button type="button" class="btn btn-outline-secondary" (click)="randomize()">Aleatorio</button>
           <button type="button" class="btn btn-outline-secondary" (click)="reset()">Reiniciar</button>
+          <button type="button" class="btn btn-outline-primary" (click)="downloadPdf()" [disabled]="!total() || !!error()">
+            Descargar PDF
+          </button>
         </div>
       </div>
     </form>

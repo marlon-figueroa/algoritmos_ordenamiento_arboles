@@ -1,8 +1,10 @@
 import { Component, DestroyRef, computed, effect, inject, input, signal, untracked } from '@angular/core';
 import { Algorithm } from '../core/algorithms';
+import { downloadSimulationPdf } from '../core/pdf-report';
 import { SAMPLE_INPUTS, SimFrame, emptyFrame, formatValue, parseInput } from './models';
 import { simulate } from './engines';
 import { layoutForest } from './layout';
+import { buildSortReport } from './report';
 
 @Component({
   selector: 'app-simulator',
@@ -142,6 +144,18 @@ export class Simulator {
   }
 
   formatValue = formatValue;
+
+  downloadPdf(): void {
+    if (!this.frames().length || this.error()) {
+      return;
+    }
+    try {
+      const input = parseInput(this.rawInput());
+      downloadSimulationPdf(buildSortReport(this.algorithm(), input, this.frames()));
+    } catch (err) {
+      this.error.set(err instanceof Error ? err.message : 'No se pudo generar el PDF.');
+    }
+  }
 
   private queueTick(): void {
     if (this.timer) {
