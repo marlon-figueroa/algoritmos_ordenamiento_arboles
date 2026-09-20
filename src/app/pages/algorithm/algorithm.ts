@@ -2,10 +2,11 @@ import { Component, computed, effect, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { ALGORITHMS } from '../../core/algorithms';
+import { Simulator } from '../../simulator/simulator';
 
 @Component({
   selector: 'app-algorithm',
-  imports: [RouterLink],
+  imports: [RouterLink, Simulator],
   templateUrl: './algorithm.html',
 })
 export class AlgorithmPage {

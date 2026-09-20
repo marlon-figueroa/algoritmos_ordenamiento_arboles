@@ -97,3 +97,65 @@ body {
   letter-spacing: 0.08em;
 }
 
+.sim-tree {
+  min-height: 220px;
+  overflow: auto;
+}
+
+.sim-edge {
+  stroke: var(--bs-border-color);
+  stroke-width: 2;
+}
+
+.sim-node {
+  fill: var(--bs-body-bg);
+  stroke: var(--bs-border-color);
+  stroke-width: 2;
+}
+
+.sim-node-on {
+  fill: rgba(var(--bs-primary-rgb), 0.22);
+  stroke: var(--bs-primary);
+}
+
+.sim-node-red {
+  fill: #c94c4c;
+  stroke: #8f2f2f;
+}
+
+.sim-node-black {
+  fill: #243028;
+  stroke: #101612;
+}
+
+.sim-label {
+  fill: var(--bs-body-color);
+  font-size: 13px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+
+.sim-node-red + .sim-label,
+.sim-node-black + .sim-label,
+.sim-node-red ~ .sim-label,
+.sim-node-black ~ .sim-label {
+  fill: #fff;
+}
+
+g:has(.sim-node-red) .sim-label,
+g:has(.sim-node-black) .sim-label {
+  fill: #fff;
+}
+
+.sim-caption {
+  fill: var(--bs-secondary-color);
+  font-size: 10px;
+  text-anchor: middle;
+}
+
+.sim-faded {
+  opacity: 0.38;
+}
+

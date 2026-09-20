@@ -1,0 +1,139 @@
+<section class="card shadow-sm mb-4" aria-labelledby="sim-title">
+  <div class="card-body">
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+      <div>
+        <p class="text-primary fw-semibold text-uppercase small letter-wide mb-1">Simulador</p>
+        <h2 id="sim-title" class="h4 font-display mb-0">Usa {{ algorithm().name }}</h2>
+      </div>
+      <span class="badge text-bg-secondary align-self-center">
+        Paso {{ total() ? index() + 1 : 0 }} / {{ total() }}
+      </span>
+    </div>
+
+    <form class="row g-2 align-items-end mb-3" (submit)="$event.preventDefault(); load()">
+      <div class="col-lg-7">
+        <label class="form-label small mb-1" for="sim-input">Arreglo de entrada</label>
+        <input
+          id="sim-input"
+          class="form-control"
+          [class.is-invalid]="error()"
+          [value]="rawInput()"
+          (input)="rawInput.set($any($event.target).value)"
+          placeholder="Ejemplo: 7, 3, 9, 1, 5"
+        />
+        @if (error()) {
+          <div class="invalid-feedback d-block">{{ error() }}</div>
+        }
+      </div>
+      <div class="col-lg-5 d-flex flex-wrap gap-2">
+        <button type="submit" class="btn btn-primary">Cargar</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="randomize()">Aleatorio</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="reset()">Reiniciar</button>
+      </div>
+    </form>
+
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+      <button type="button" class="btn btn-success" (click)="play()" [disabled]="!total() || playing()">
+        Reproducir
+      </button>
+      <button type="button" class="btn btn-outline-secondary" (click)="pause()" [disabled]="!playing()">
+        Pausa
+      </button>
+      <button type="button" class="btn btn-outline-secondary" (click)="back()" [disabled]="index() === 0">
+        Atrás
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        (click)="step()"
+        [disabled]="!total() || index() >= total() - 1"
+      >
+        Paso
+      </button>
+      <label class="small text-body-secondary ms-lg-2 mb-0" for="sim-speed">Velocidad</label>
+      <input
+        id="sim-speed"
+        type="range"
+        min="180"
+        max="1400"
+        step="40"
+        [value]="speed()"
+        (input)="onSpeed($any($event.target).value)"
+      />
+    </div>
+
+    <p class="alert mb-3" [class.alert-success]="frame().done" [class.alert-info]="!frame().done">
+      {{ frame().message }}
+    </p>
+
+    <div class="sim-tree bg-body-tertiary rounded-3 mb-3">
+      @if (frame().nodes.length) {
+        <svg
+          class="w-100"
+          [attr.viewBox]="'0 0 ' + viewBoxWidth + ' ' + viewBoxHeight"
+          role="img"
+          [attr.aria-label]="'Árbol de ' + algorithm().name"
+        >
+          @for (edge of edges(); track edge.id) {
+            <line
+              [attr.x1]="edge.x1"
+              [attr.y1]="edge.y1"
+              [attr.x2]="edge.x2"
+              [attr.y2]="edge.y2"
+              class="sim-edge"
+            />
+          }
+          @for (node of frame().nodes; track node.id) {
+            @if (positions().get(node.id); as pos) {
+              <g [class.sim-faded]="node.faded">
+                <rect
+                  [attr.x]="pos.x - pos.width / 2"
+                  [attr.y]="pos.y - pos.height / 2"
+                  [attr.width]="pos.width"
+                  [attr.height]="pos.height"
+                  rx="10"
+                  [class.sim-node]="true"
+                  [class.sim-node-on]="node.highlight"
+                  [class.sim-node-red]="node.color === 'red'"
+                  [class.sim-node-black]="node.color === 'black'"
+                />
+                <text [attr.x]="pos.x" [attr.y]="pos.y + 1" class="sim-label">
+                  {{ node.keys.map(formatValue).join(' | ') }}
+                </text>
+                @if (node.label) {
+                  <text [attr.x]="pos.x" [attr.y]="pos.y + pos.height / 2 + 14" class="sim-caption">
+                    {{ node.label }}
+                  </text>
+                }
+              </g>
+            }
+          }
+        </svg>
+      } @else {
+        <p class="text-body-secondary text-center py-5 mb-0">El árbol aparecerá al cargar un arreglo.</p>
+      }
+    </div>
+
+    <div class="mb-2">
+      <div class="small text-body-secondary mb-1">Arreglo</div>
+      <div class="d-flex flex-wrap gap-2">
+        @for (value of frame().array; track $index) {
+          <span class="badge rounded-pill fs-6 px-3 py-2" [class]="chipClass($index)">
+            {{ formatValue(value) }}
+          </span>
+        }
+      </div>
+    </div>
+
+    @if (frame().output.length) {
+      <div>
+        <div class="small text-body-secondary mb-1">Salida ordenada</div>
+        <div class="d-flex flex-wrap gap-2">
+          @for (value of frame().output; track $index) {
+            <span class="badge rounded-pill text-bg-success fs-6 px-3 py-2">{{ formatValue(value) }}</span>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</section>
