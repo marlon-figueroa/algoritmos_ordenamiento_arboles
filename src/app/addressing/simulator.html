@@ -1,0 +1,235 @@
+<section class="card shadow-sm mb-4" aria-labelledby="addr-sim-title">
+  <div class="card-body">
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+      <div>
+        <p class="text-primary fw-semibold text-uppercase small letter-wide mb-1">Simulador</p>
+        <h2 id="addr-sim-title" class="h4 font-display mb-0">Planifica con {{ algorithm().name }}</h2>
+      </div>
+      <span class="badge text-bg-secondary align-self-center">
+        Paso {{ total() ? index() + 1 : 0 }} / {{ total() }}
+      </span>
+    </div>
+
+    <form class="mb-3" (submit)="$event.preventDefault(); load()">
+      <div class="row g-2">
+        <div class="col-lg-6">
+          <label class="form-label small mb-1" for="addr-gateway">IP de gateway</label>
+          <input
+            id="addr-gateway"
+            class="form-control font-monospace"
+            [class.is-invalid]="error()"
+            [value]="gateway()"
+            (input)="gateway.set($any($event.target).value)"
+            placeholder="172.16.0.1/16"
+            autocomplete="off"
+          />
+          <p class="form-text mb-0">Acepta CIDR. Si omites el prefijo, se usa la máscara de clase.</p>
+        </div>
+        <div class="col-4 col-lg-2">
+          <label class="form-label small mb-1" for="addr-lan">Redes LAN</label>
+          <input
+            id="addr-lan"
+            type="number"
+            min="0"
+            max="32"
+            class="form-control"
+            [value]="lanCount()"
+            (input)="lanCount.set($any($event.target).value)"
+          />
+        </div>
+        <div class="col-4 col-lg-2">
+          <label class="form-label small mb-1" for="addr-man">Redes MAN</label>
+          <input
+            id="addr-man"
+            type="number"
+            min="0"
+            max="32"
+            class="form-control"
+            [value]="manCount()"
+            (input)="manCount.set($any($event.target).value)"
+          />
+        </div>
+        <div class="col-4 col-lg-2">
+          <label class="form-label small mb-1" for="addr-wan">Redes WAN</label>
+          <input
+            id="addr-wan"
+            type="number"
+            min="0"
+            max="32"
+            class="form-control"
+            [value]="wanCount()"
+            (input)="wanCount.set($any($event.target).value)"
+          />
+        </div>
+        <div class="col-4 col-lg-2">
+          <label class="form-label small mb-1" for="addr-lan-hosts">Disp. por LAN</label>
+          <input
+            id="addr-lan-hosts"
+            type="number"
+            min="1"
+            class="form-control"
+            [value]="lanHosts()"
+            (input)="lanHosts.set($any($event.target).value)"
+          />
+        </div>
+        <div class="col-4 col-lg-2">
+          <label class="form-label small mb-1" for="addr-man-hosts">Disp. por MAN</label>
+          <input
+            id="addr-man-hosts"
+            type="number"
+            min="1"
+            class="form-control"
+            [value]="manHosts()"
+            (input)="manHosts.set($any($event.target).value)"
+          />
+        </div>
+        <div class="col-4 col-lg-2">
+          <label class="form-label small mb-1" for="addr-wan-hosts">Disp. por WAN</label>
+          <input
+            id="addr-wan-hosts"
+            type="number"
+            min="1"
+            class="form-control"
+            [value]="wanHosts()"
+            (input)="wanHosts.set($any($event.target).value)"
+          />
+        </div>
+        <div class="col-lg-6 d-flex flex-wrap align-items-end gap-2">
+          <button type="submit" class="btn btn-primary">Planificar</button>
+          <button type="button" class="btn btn-outline-secondary" (click)="randomize()">Aleatorio</button>
+          <button type="button" class="btn btn-outline-secondary" (click)="reset()">Reiniciar</button>
+          <button type="button" class="btn btn-outline-primary" (click)="downloadPdf()" [disabled]="!total() || !!error()">
+            Descargar PDF
+          </button>
+        </div>
+      </div>
+      @if (error()) {
+        <div class="invalid-feedback d-block mt-2">{{ error() }}</div>
+      }
+    </form>
+
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+      <button type="button" class="btn btn-success" (click)="play()" [disabled]="!total() || playing()">
+        Reproducir
+      </button>
+      <button type="button" class="btn btn-outline-secondary" (click)="pause()" [disabled]="!playing()">
+        Pausa
+      </button>
+      <button type="button" class="btn btn-outline-secondary" (click)="back()" [disabled]="index() === 0">
+        Atrás
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        (click)="step()"
+        [disabled]="!total() || index() >= total() - 1"
+      >
+        Paso
+      </button>
+      <label class="small text-body-secondary ms-lg-2 mb-0" for="addr-speed">Velocidad</label>
+      <input
+        id="addr-speed"
+        type="range"
+        min="180"
+        max="1400"
+        step="40"
+        [value]="speed()"
+        (input)="onSpeed($any($event.target).value)"
+      />
+    </div>
+
+    <p class="alert mb-3" [class.alert-success]="frame().done" [class.alert-info]="!frame().done">
+      {{ frame().message }}
+    </p>
+
+    @if (parent(); as parent) {
+      <div class="row g-2 mb-3">
+        <div class="col-6 col-lg-3">
+          <div class="bg-body-tertiary rounded-3 p-3 h-100">
+            <div class="text-body-secondary text-uppercase small">Bloque padre</div>
+            <div class="fw-bold font-monospace">{{ parent.network }}/{{ parent.prefix }}</div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="bg-body-tertiary rounded-3 p-3 h-100">
+            <div class="text-body-secondary text-uppercase small">Gateway</div>
+            <div class="fw-bold font-monospace">{{ parent.gateway }}</div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="bg-body-tertiary rounded-3 p-3 h-100">
+            <div class="text-body-secondary text-uppercase small">Máscara padre</div>
+            <div class="fw-bold font-monospace">{{ parent.mask }}</div>
+          </div>
+        </div>
+        <div class="col-6 col-lg-3">
+          <div class="bg-body-tertiary rounded-3 p-3 h-100">
+            <div class="text-body-secondary text-uppercase small">Libre</div>
+            <div class="fw-bold">{{ frame().unused | number: '1.0-0' }} dir.</div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <div class="addr-legend d-flex flex-wrap gap-3 small text-body-secondary mb-2">
+      <span><i class="raid-swatch" [style.background]="kindColor('LAN')"></i> LAN</span>
+      <span><i class="raid-swatch" [style.background]="kindColor('MAN')"></i> MAN</span>
+      <span><i class="raid-swatch" [style.background]="kindColor('WAN')"></i> WAN</span>
+      <span><i class="raid-swatch addr-swatch-free"></i> Libre</span>
+    </div>
+
+    <div class="addr-map mb-3" role="img" [attr.aria-label]="'Mapa del bloque ' + (parent()?.network ?? '')">
+      @for (segment of segments(); track $index) {
+        <div
+          class="addr-seg"
+          [class.addr-seg-free]="segment.name === 'Libre'"
+          [class.addr-seg-on]="isHighlighted(segment.name)"
+          [style.flex-grow]="segment.size"
+          [style.background]="segment.name === 'Libre' ? 'transparent' : segment.color"
+          [attr.title]="segment.name + ' · /' + segment.prefix"
+        >
+          <span>{{ segment.name }}</span>
+        </div>
+      }
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-sm align-middle mb-0 addr-table">
+        <caption class="visually-hidden">Tabla de direccionamiento</caption>
+        <thead>
+          <tr>
+            <th scope="col">Red</th>
+            <th scope="col">IP inicial</th>
+            <th scope="col">Primera IP</th>
+            <th scope="col">Última IP</th>
+            <th scope="col">Broadcast</th>
+            <th scope="col">Máscara</th>
+            <th scope="col" class="text-end">Dispositivos</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (network of networks(); track network.name) {
+            <tr [class.addr-row-on]="isHighlighted(network.name)">
+              <th scope="row">
+                <span class="d-inline-flex align-items-center gap-2">
+                  <i class="raid-swatch mb-0" [style.background]="kindColor(network.kind)"></i>
+                  {{ network.name }}
+                </span>
+              </th>
+              <td class="font-monospace">{{ network.network }}/{{ network.prefix }}</td>
+              <td class="font-monospace">{{ network.firstHost }}</td>
+              <td class="font-monospace">{{ network.lastHost }}</td>
+              <td class="font-monospace">{{ network.broadcast }}</td>
+              <td class="font-monospace">{{ network.mask }}</td>
+              <td class="text-end fw-semibold">{{ network.usableHosts | number: '1.0-0' }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="text-body-secondary">Aún no hay filas. Avanza la simulación para ir llenando la tabla.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

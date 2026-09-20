@@ -9,7 +9,7 @@
       </span>
       <span class="d-none d-sm-block">
         <span class="d-block font-display lh-sm">Simuladores</span>
-        <small class="text-body-secondary fw-normal">AOA · APPSO · ARD</small>
+        <small class="text-body-secondary fw-normal">AOA · APPSO · ARD · TDR</small>
       </span>
     </a>
 
@@ -120,6 +120,29 @@
             <span>
               <span class="d-block font-display lh-sm">ARD</span>
               <small class="nav-topic-desc">Algoritmos de RAIDs existentes para discos</small>
+            </span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link nav-topic"
+            routerLink="/direccionamiento"
+            [class.active]="tdrActive()"
+            [attr.aria-current]="tdrActive() ? 'page' : null"
+            title="Tabla de direccionamiento para definir redes"
+          >
+            <span class="nav-topic-icon" aria-hidden="true">
+              <svg viewBox="0 0 32 32" fill="none">
+                <rect x="5" y="6" width="22" height="20" rx="2.2" stroke="currentColor" stroke-width="1.8" />
+                <path d="M5 12h22M11 6v20" stroke="currentColor" stroke-width="1.8" />
+                <circle cx="8" cy="16.5" r="1.1" fill="currentColor" />
+                <circle cx="8" cy="21.5" r="1.1" fill="currentColor" />
+                <path d="M14.5 16.5h8M14.5 21.5h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              </svg>
+            </span>
+            <span>
+              <span class="d-block font-display lh-sm">TDR</span>
+              <small class="nav-topic-desc">Tabla de direccionamiento para definir redes</small>
             </span>
           </a>
         </li>

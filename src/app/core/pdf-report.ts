@@ -151,7 +151,7 @@ export async function downloadSimulationPdf(report: SimulationReport): Promise<v
   doc.setFont(FONT, 'normal');
   doc.setFontSize(8);
   doc.setTextColor(120, 130, 145);
-  doc.text('Algoritmos y simuladores  ·  AOA · APPSO · ARD', MARGIN, doc.internal.pageSize.getHeight() - 10);
+  doc.text('Algoritmos y simuladores  ·  AOA · APPSO · ARD · TDR', MARGIN, doc.internal.pageSize.getHeight() - 10);
 
   doc.save(report.filename);
 }

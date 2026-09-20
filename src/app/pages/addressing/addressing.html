@@ -1,0 +1,111 @@
+@if (algorithm(); as algorithm) {
+  <article class="py-3 pb-5">
+    <nav class="mb-3" aria-label="Migas de pan">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a routerLink="/direccionamiento">TDR</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">{{ algorithm.name }}</li>
+      </ol>
+    </nav>
+
+    <header class="mb-4 col-lg-10">
+      <p class="text-primary fw-semibold text-uppercase small letter-wide mb-2">
+        {{ algorithm.family }}
+      </p>
+      <h1 class="display-5 font-display">{{ algorithm.name }}</h1>
+      <p class="lead text-body-secondary">{{ algorithm.description }}</p>
+      <div class="d-flex flex-wrap gap-2">
+        <span class="badge rounded-pill text-bg-secondary">Máscara {{ algorithm.traits.maskKind.toLowerCase() }}</span>
+        <span class="badge rounded-pill text-bg-secondary">{{ algorithm.traits.allocation }}</span>
+        <span class="badge rounded-pill text-bg-secondary">Desperdicio {{ algorithm.traits.waste.toLowerCase() }}</span>
+      </div>
+    </header>
+
+    <app-addressing-simulator [algorithm]="algorithm" />
+
+    <section class="card mb-4" aria-labelledby="addr-traits-title">
+      <div class="card-body">
+        <h2 id="addr-traits-title" class="h4 font-display mb-3">Características</h2>
+        <div class="row g-3">
+          <div class="col-6 col-lg-3">
+            <div class="bg-body-tertiary rounded-3 p-3 h-100">
+              <div class="text-body-secondary text-uppercase small">Máscara</div>
+              <div class="fw-bold">{{ algorithm.traits.maskKind }}</div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="bg-body-tertiary rounded-3 p-3 h-100">
+              <div class="text-body-secondary text-uppercase small">Asignación</div>
+              <div class="fw-bold">{{ algorithm.traits.allocation }}</div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="bg-body-tertiary rounded-3 p-3 h-100">
+              <div class="text-body-secondary text-uppercase small">Desperdicio</div>
+              <div class="fw-bold">{{ algorithm.traits.waste }}</div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="bg-body-tertiary rounded-3 p-3 h-100">
+              <div class="text-body-secondary text-uppercase small">Orden</div>
+              <div class="fw-bold">{{ algorithm.traits.order }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card mb-4" aria-labelledby="addr-steps-title">
+      <div class="card-body">
+        <h2 id="addr-steps-title" class="h4 font-display mb-3">Cómo funciona</h2>
+        <ol class="list-group list-group-flush list-group-numbered">
+          @for (step of algorithm.howItWorks; track step) {
+            <li class="list-group-item bg-transparent px-0">{{ step }}</li>
+          }
+        </ol>
+      </div>
+    </section>
+
+    <div class="row g-4 mb-4">
+      <section class="col-lg-7" aria-labelledby="addr-pseudo-title">
+        <div class="card h-100">
+          <div class="card-body">
+            <h2 id="addr-pseudo-title" class="h4 font-display mb-3">Pseudocódigo</h2>
+            <pre class="algo-pre p-3 mb-0 overflow-auto"><code>{{ algorithm.pseudocode }}</code></pre>
+          </div>
+        </div>
+      </section>
+      <section class="col-lg-5" aria-labelledby="addr-example-title">
+        <div class="card h-100">
+          <div class="card-body">
+            <h2 id="addr-example-title" class="h4 font-display mb-3">Ejemplo</h2>
+            <pre class="algo-pre p-3 mb-0 overflow-auto"><code>{{ algorithm.example }}</code></pre>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section aria-labelledby="addr-related-title">
+      <h2 id="addr-related-title" class="h4 font-display mb-3">Otros algoritmos</h2>
+      <div class="row g-3">
+        @for (item of related(); track item.slug) {
+          <div class="col-md-6">
+            <a class="card algo-card h-100 text-decoration-none text-body" [routerLink]="['/direccionamiento', item.slug]">
+              <div class="card-body">
+                <strong class="d-block">{{ item.name }}</strong>
+                <span class="text-body-secondary small">{{ item.family }}</span>
+              </div>
+            </a>
+          </div>
+        }
+      </div>
+    </section>
+  </article>
+} @else {
+  <section class="py-5 col-lg-7">
+    <h1 class="font-display">No encontramos ese método</h1>
+    <p class="text-body-secondary">El enlace no coincide con ningún algoritmo del catálogo TDR.</p>
+    <a class="btn btn-primary" routerLink="/direccionamiento">Volver al menú</a>
+  </section>
+}

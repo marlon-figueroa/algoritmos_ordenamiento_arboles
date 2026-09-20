@@ -1,6 +1,6 @@
 # Algoritmos y simuladores
 
-Sitio en **Angular 22** y **Bootstrap 5.3** con tres catálogos en grid: ordenamiento de árboles (AOA), planificación de procesos (APPSO) y RAIDs de discos (ARD). Cada ficha incluye un simulador. El maquetado es encabezado, cuerpo y pie de página, con tema claro y oscuro (`data-bs-theme`).
+Sitio en **Angular 22** y **Bootstrap 5.3** con cuatro catálogos en grid: ordenamiento de árboles (AOA), planificación de procesos (APPSO), RAIDs de discos (ARD) y tabla de direccionamiento (TDR). Cada ficha incluye un simulador. El maquetado es encabezado, cuerpo y pie de página, con tema claro y oscuro (`data-bs-theme`).
 
 ## Requisitos
 
@@ -58,3 +58,4 @@ npm run deploy
 - **AOA:** Tree Sort, Heap Sort, Tournament Sort, Smoothsort, Cartesian Tree Sort, AVL Tree Sort, Red-Black Tree Sort, B-Tree Sort y Splay Tree Sort.
 - **APPSO:** FCFS, SJF, SRTF, Round Robin, prioridad, colas multinivel y MLFQ.
 - **ARD:** RAID 0, 1, 2, 3, 4, 5, 6, 10 y 01.
+- **TDR:** VLSM y FLSM para planificar LAN, MAN y WAN desde la IP de gateway.

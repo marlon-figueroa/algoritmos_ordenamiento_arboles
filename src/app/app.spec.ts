@@ -23,5 +23,6 @@ describe('App', () => {
     expect(compiled.querySelector('.navbar')?.textContent).toContain('AOA');
     expect(compiled.querySelector('.navbar')?.textContent).toContain('APPSO');
     expect(compiled.querySelector('.navbar')?.textContent).toContain('ARD');
+    expect(compiled.querySelector('.navbar')?.textContent).toContain('TDR');
   });
 });

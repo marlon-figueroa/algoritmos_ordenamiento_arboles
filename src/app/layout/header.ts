@@ -29,4 +29,6 @@ export class Header {
   protected readonly appsoActive = computed(() => this.path().split('?')[0].startsWith('/planificacion'));
 
   protected readonly ardActive = computed(() => this.path().split('?')[0].startsWith('/raids'));
+
+  protected readonly tdrActive = computed(() => this.path().split('?')[0].startsWith('/direccionamiento'));
 }

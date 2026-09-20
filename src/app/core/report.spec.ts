@@ -9,6 +9,10 @@ import { SAMPLE_PROCESSES } from '../scheduler/models';
 import { simulateRaid } from '../raid/engines';
 import { buildRaidConclusion } from '../raid/report';
 import { SAMPLE_BLOCKS } from '../raid/models';
+import { ADDRESSING } from './addressing';
+import { simulateAddressing } from '../addressing/engines';
+import { buildAddressConclusion } from '../addressing/report';
+import { SAMPLE_PLAN } from '../addressing/models';
 
 describe('informes PDF', () => {
   it('Tree Sort concluye que el resultado está ordenado', () => {
@@ -45,6 +49,15 @@ describe('informes PDF', () => {
     const frames = simulateRaid('raid-0', SAMPLE_BLOCKS, 4);
     const text = buildRaidConclusion(algorithm, SAMPLE_BLOCKS, 4, frames).join(' ');
     expect(text).toContain('no pudo reconstruir');
+  });
+
+  it('VLSM concluye que aprovecha mejor el bloque del gateway', () => {
+    const algorithm = ADDRESSING.find((item) => item.slug === 'vlsm')!;
+    const frames = simulateAddressing('vlsm', SAMPLE_PLAN);
+    const text = buildAddressConclusion(algorithm, SAMPLE_PLAN, frames).join(' ');
+    expect(text).toContain('VLSM');
+    expect(text).toContain('172.16.0.0/16');
+    expect(text).toContain('aprovecha mejor');
   });
 
   it('RAID 5 concluye que se reconstruye tras el fallo', () => {
