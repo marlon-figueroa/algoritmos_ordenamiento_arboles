@@ -123,13 +123,13 @@ export class RaidSimulator {
 
   kindLabel = kindLabel;
 
-  downloadPdf(): void {
+  async downloadPdf(): Promise<void> {
     if (!this.frames().length || this.error()) {
       return;
     }
     try {
       const blocks = parseBlocks(this.rawInput());
-      downloadSimulationPdf(buildRaidReport(this.algorithm(), blocks, this.disks(), this.frames()));
+      await downloadSimulationPdf(buildRaidReport(this.algorithm(), blocks, this.disks(), this.frames()));
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'No se pudo generar el PDF.');
     }

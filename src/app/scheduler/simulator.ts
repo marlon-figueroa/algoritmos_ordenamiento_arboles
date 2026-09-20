@@ -133,13 +133,13 @@ export class SchedulerSimulator {
     return 'text-bg-secondary';
   }
 
-  downloadPdf(): void {
+  async downloadPdf(): Promise<void> {
     if (!this.frames().length || this.error()) {
       return;
     }
     try {
       const input = parseProcesses(this.rawInput());
-      downloadSimulationPdf(buildScheduleReport(this.algorithm(), input, this.frames(), this.quantum()));
+      await downloadSimulationPdf(buildScheduleReport(this.algorithm(), input, this.frames(), this.quantum()));
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'No se pudo generar el PDF.');
     }

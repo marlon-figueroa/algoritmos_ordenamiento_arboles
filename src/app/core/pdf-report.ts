@@ -18,6 +18,56 @@ export interface SimulationReport {
 
 const MARGIN = 16;
 const PRIMARY: [number, number, number] = [29, 78, 216];
+const FONT = 'PTSans';
+
+let fontCache: { regular: string; bold: string } | null = null;
+
+function fontUrl(file: string): string {
+  const base = document.querySelector('base')?.href ?? `${window.location.origin}/`;
+  return new URL(`fonts/${file}`, base).toString();
+}
+
+function bufferToBase64(buffer: ArrayBuffer): string {
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  const chunk = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunk) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
+  }
+  return btoa(binary);
+}
+
+async function loadPtSans(): Promise<{ regular: string; bold: string }> {
+  if (fontCache) {
+    return fontCache;
+  }
+  const [regular, bold] = await Promise.all([
+    fetch(fontUrl('PTSans-Regular.ttf')).then((response) => {
+      if (!response.ok) {
+        throw new Error('No se pudo cargar PT Sans Regular.');
+      }
+      return response.arrayBuffer();
+    }),
+    fetch(fontUrl('PTSans-Bold.ttf')).then((response) => {
+      if (!response.ok) {
+        throw new Error('No se pudo cargar PT Sans Bold.');
+      }
+      return response.arrayBuffer();
+    }),
+  ]);
+  fontCache = {
+    regular: bufferToBase64(regular),
+    bold: bufferToBase64(bold),
+  };
+  return fontCache;
+}
+
+function registerPtSans(doc: jsPDF, fonts: { regular: string; bold: string }): void {
+  doc.addFileToVFS('PTSans-Regular.ttf', fonts.regular);
+  doc.addFont('PTSans-Regular.ttf', FONT, 'normal');
+  doc.addFileToVFS('PTSans-Bold.ttf', fonts.bold);
+  doc.addFont('PTSans-Bold.ttf', FONT, 'bold');
+}
 
 function ensureSpace(doc: jsPDF, y: number, needed: number): number {
   const pageHeight = doc.internal.pageSize.getHeight();
@@ -30,7 +80,7 @@ function ensureSpace(doc: jsPDF, y: number, needed: number): number {
 
 function writeParagraphs(doc: jsPDF, lines: string[], y: number): number {
   const width = doc.internal.pageSize.getWidth() - MARGIN * 2;
-  doc.setFont('helvetica', 'normal');
+  doc.setFont(FONT, 'normal');
   doc.setFontSize(11);
   doc.setTextColor(18, 32, 51);
   for (const line of lines) {
@@ -42,8 +92,10 @@ function writeParagraphs(doc: jsPDF, lines: string[], y: number): number {
   return y;
 }
 
-export function downloadSimulationPdf(report: SimulationReport): void {
+export async function downloadSimulationPdf(report: SimulationReport): Promise<void> {
+  const fonts = await loadPtSans();
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+  registerPtSans(doc, fonts);
   const width = doc.internal.pageSize.getWidth();
   const date = new Date().toLocaleString('es-GT', {
     dateStyle: 'medium',
@@ -53,16 +105,16 @@ export function downloadSimulationPdf(report: SimulationReport): void {
   doc.setFillColor(...PRIMARY);
   doc.rect(0, 0, width, 28, 'F');
   doc.setTextColor(255, 255, 255);
-  doc.setFont('helvetica', 'bold');
+  doc.setFont(FONT, 'bold');
   doc.setFontSize(16);
   doc.text(report.algorithm, MARGIN, 13);
-  doc.setFont('helvetica', 'normal');
+  doc.setFont(FONT, 'normal');
   doc.setFontSize(10);
   doc.text(`${report.catalog}  ·  ${date}`, MARGIN, 21);
 
   let y = 40;
   doc.setTextColor(...PRIMARY);
-  doc.setFont('helvetica', 'bold');
+  doc.setFont(FONT, 'bold');
   doc.setFontSize(13);
   doc.text('Entrada de la simulación', MARGIN, y);
   y = writeParagraphs(doc, report.inputLines, y + 8);
@@ -70,7 +122,7 @@ export function downloadSimulationPdf(report: SimulationReport): void {
   y += 4;
   y = ensureSpace(doc, y, 12);
   doc.setTextColor(...PRIMARY);
-  doc.setFont('helvetica', 'bold');
+  doc.setFont(FONT, 'bold');
   doc.setFontSize(13);
   doc.text('Resultado de la ejecución', MARGIN, y);
   y = writeParagraphs(doc, report.resultLines, y + 8);
@@ -82,8 +134,8 @@ export function downloadSimulationPdf(report: SimulationReport): void {
       head: [report.resultTable.headers],
       body: report.resultTable.rows,
       margin: { left: MARGIN, right: MARGIN },
-      styles: { font: 'helvetica', fontSize: 9, cellPadding: 2 },
-      headStyles: { fillColor: PRIMARY, textColor: 255 },
+      styles: { font: FONT, fontStyle: 'normal', fontSize: 9, cellPadding: 2 },
+      headStyles: { font: FONT, fontStyle: 'bold', fillColor: PRIMARY, textColor: 255 },
       alternateRowStyles: { fillColor: [243, 246, 251] },
     });
     y = ((doc as jsPDF & { lastAutoTable?: { finalY: number } }).lastAutoTable?.finalY ?? y) + 10;
@@ -91,11 +143,12 @@ export function downloadSimulationPdf(report: SimulationReport): void {
 
   y = ensureSpace(doc, y, 16);
   doc.setTextColor(...PRIMARY);
-  doc.setFont('helvetica', 'bold');
+  doc.setFont(FONT, 'bold');
   doc.setFontSize(13);
   doc.text('Conclusión', MARGIN, y);
   y = writeParagraphs(doc, report.conclusion, y + 8);
 
+  doc.setFont(FONT, 'normal');
   doc.setFontSize(8);
   doc.setTextColor(120, 130, 145);
   doc.text('Algoritmos y simuladores  ·  AOA · APPSO · ARD', MARGIN, doc.internal.pageSize.getHeight() - 10);

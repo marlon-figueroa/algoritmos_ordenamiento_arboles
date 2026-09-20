@@ -145,13 +145,13 @@ export class Simulator {
 
   formatValue = formatValue;
 
-  downloadPdf(): void {
+  async downloadPdf(): Promise<void> {
     if (!this.frames().length || this.error()) {
       return;
     }
     try {
       const input = parseInput(this.rawInput());
-      downloadSimulationPdf(buildSortReport(this.algorithm(), input, this.frames()));
+      await downloadSimulationPdf(buildSortReport(this.algorithm(), input, this.frames()));
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'No se pudo generar el PDF.');
     }
