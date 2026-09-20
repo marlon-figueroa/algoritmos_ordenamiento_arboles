@@ -1,14 +1,15 @@
-$primary: #1f6b48;
-$secondary: #8a6a3a;
-$success: #2d6a4f;
+$primary: #1d4ed8;
+$secondary: #3b5b8c;
+$success: #1d4ed8;
+$info: #2563eb;
 $font-family-sans-serif:
-  'Source Sans 3',
+  'PT Sans',
   system-ui,
   -apple-system,
   'Segoe UI',
   sans-serif;
-$headings-font-family: 'Fraunces', Georgia, serif;
-$headings-font-weight: 680;
+$headings-font-family: 'PT Sans', system-ui, sans-serif;
+$headings-font-weight: 700;
 $border-radius: 0.85rem;
 $border-radius-lg: 1.1rem;
 $card-border-radius: 1.1rem;
@@ -18,33 +19,37 @@ $min-contrast-ratio: 4.5;
 @import 'bootstrap/scss/bootstrap';
 
 [data-bs-theme='light'] {
-  --bs-body-bg: #f3efe6;
-  --bs-body-color: #1c2418;
-  --bs-secondary-color: #5d6758;
-  --bs-tertiary-bg: #fffaf2;
-  --bs-border-color: #d9d0c2;
-  --bs-primary: #1f6b48;
-  --bs-primary-rgb: 31, 107, 72;
-  --bs-link-color: #1f6b48;
-  --bs-link-hover-color: #145338;
-  --bs-emphasis-color: #1c2418;
-  --code-bg: #17211b;
-  --code-text: #e7f0e8;
+  --bs-body-bg: #f3f6fb;
+  --bs-body-color: #122033;
+  --bs-secondary-color: #5b6b80;
+  --bs-tertiary-bg: #ffffff;
+  --bs-border-color: #d5dee8;
+  --bs-primary: #1d4ed8;
+  --bs-primary-rgb: 29, 78, 216;
+  --bs-secondary: #3b5b8c;
+  --bs-secondary-rgb: 59, 91, 140;
+  --bs-link-color: #1d4ed8;
+  --bs-link-hover-color: #1e3a8a;
+  --bs-emphasis-color: #122033;
+  --code-bg: #122033;
+  --code-text: #dbe7ff;
 }
 
 [data-bs-theme='dark'] {
-  --bs-body-bg: #101612;
-  --bs-body-color: #e8eee6;
-  --bs-secondary-color: #a7b3a8;
-  --bs-tertiary-bg: #182019;
-  --bs-border-color: #2c3a30;
-  --bs-primary: #8ad4aa;
-  --bs-primary-rgb: 138, 212, 170;
-  --bs-link-color: #8ad4aa;
-  --bs-link-hover-color: #b5e6c8;
-  --bs-emphasis-color: #e8eee6;
-  --code-bg: #0c120e;
-  --code-text: #d7eadb;
+  --bs-body-bg: #0b1220;
+  --bs-body-color: #e8eef7;
+  --bs-secondary-color: #9aabc0;
+  --bs-tertiary-bg: #121a2a;
+  --bs-border-color: #2a3a52;
+  --bs-primary: #7eb6ff;
+  --bs-primary-rgb: 126, 182, 255;
+  --bs-secondary: #8aa4c8;
+  --bs-secondary-rgb: 138, 164, 200;
+  --bs-link-color: #7eb6ff;
+  --bs-link-hover-color: #b9d6ff;
+  --bs-emphasis-color: #e8eef7;
+  --code-bg: #081018;
+  --code-text: #d7e6ff;
 }
 
 body {
@@ -53,7 +58,8 @@ body {
 
 .font-display {
   font-family: $headings-font-family;
-  letter-spacing: -0.03em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 .algo-card {
@@ -124,8 +130,8 @@ body {
 }
 
 .sim-node-black {
-  fill: #243028;
-  stroke: #101612;
+  fill: #152238;
+  stroke: #0b1220;
 }
 
 .sim-label {
